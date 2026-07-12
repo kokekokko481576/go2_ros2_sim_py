@@ -137,6 +137,39 @@
 
         </gazebo>
 
+        <!--
+            顎搭載3D LiDAR。channels/FOVはこのリポジトリ内に実機スペックの根拠がないため、
+            一般的な小型3D LiDAR相当(16ch、垂直±15°)を仮値として置いている。
+            実機LiDARの型番が決まり次第、samples/min_angle/max_angleを実スペックに合わせて更新すること。
+        -->
+        <gazebo reference="chin_lidar_frame">
+            <sensor name="chin_lidar" type="gpu_lidar">
+                <pose> 0 0 0 0 0 0 </pose>
+                <visualize>false</visualize>
+                <update_rate>10</update_rate>
+                <lidar>
+                    <scan>
+                        <horizontal>
+                            <samples>360</samples>
+                            <min_angle>-3.14</min_angle>
+                            <max_angle>3.14</max_angle>
+                        </horizontal>
+                        <vertical>
+                            <samples>16</samples>
+                            <min_angle>-0.2618</min_angle>
+                            <max_angle>0.2618</max_angle>
+                        </vertical>
+                    </scan>
+                    <range>
+                        <min>0.05</min>
+                        <max>12</max>
+                    </range>
+                </lidar>
+                <topic>/${robot_name}/chin_lidar/scan</topic>
+                <gz_frame_id>chin_lidar_frame</gz_frame_id>
+            </sensor>
+        </gazebo>
+
         <gazebo reference="camera_face">
             <!-- <material>Gazebo/Black</material> -->
 

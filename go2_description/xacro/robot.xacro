@@ -93,6 +93,39 @@
         </collision>
     </link>
 
+    <!--
+        顎(chin)搭載3D LiDAR用フレーム。船内部材ナビゲーション計画(docs/計画_経路生成.md)の
+        「顎LiDARは前下方のみ視野」に対応するダミーリンク。
+        搭載位置(xyz)はこのリポジトリに実機の顎LiDAR寸法が無いため、未使用の
+        go2_description.urdf内のHead_lower(頭部下側)リンクのオフセットを流用した仮値であり、
+        実機の正確な搭載位置を計測でき次第、更新すること。ピッチ角(前下方視野)も仮値。
+    -->
+    <joint name="chin_lidar_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="chin_lidar_frame"/>
+        <origin xyz="0.29 0.0 -0.06" rpy="0 0.35 0"/>
+    </joint>
+
+    <link name="chin_lidar_frame">
+        <inertial>
+            <mass value="0.001"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <cylinder length="0.02" radius="0.02" />
+            </geometry>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <cylinder length="0.02" radius="0.02" />
+            </geometry>
+        </collision>
+    </link>
+
     <joint name="imu_joint" type="fixed">
         <parent link="base_link"/>
         <child link="imu_link"/>
