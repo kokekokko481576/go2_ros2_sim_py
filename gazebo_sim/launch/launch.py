@@ -22,6 +22,14 @@ def generate_launch_description():
     ld.add_action(DeclareLaunchArgument('use_sim_time', default_value='true',
                                        description='Использовать симуляционное время'))
 
+    # gazebo_multi_nav2_world.launch.py へパススルーする引数
+    enable_rviz = LaunchConfiguration('enable_rviz', default='true')
+    ld.add_action(DeclareLaunchArgument('enable_rviz', default_value='true',
+                                        description='Enable rviz launch'))
+    enable_nav2 = LaunchConfiguration('enable_nav2', default='true')
+    ld.add_action(DeclareLaunchArgument('enable_nav2', default_value='true',
+                                        description='Enable Nav2 stack launch'))
+
     ld.add_action(SetParameter(name='use_sim_time', value=use_sim_time))
 
 
@@ -43,7 +51,12 @@ def generate_launch_description():
     multi_nav2_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(pkg_path, 'launch', 'gazebo_multi_nav2_world.launch.py')
-        )
+        ),
+        launch_arguments={
+            'use_sim_time': use_sim_time,
+            'enable_rviz': enable_rviz,
+            'enable_nav2': enable_nav2,
+        }.items()
     )
 
     launch_after_pause = RegisterEventHandler(

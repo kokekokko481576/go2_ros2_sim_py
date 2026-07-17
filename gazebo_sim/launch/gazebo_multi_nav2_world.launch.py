@@ -43,7 +43,16 @@ def generate_launch_description():
         name='enable_rviz', default_value=enable_rviz, description='Enable rviz launch'
     )
 
+    # falseにするとNav2スタック一式(map_server/amcl/planner/controller/behavior/
+    # smoother/bt_navigator/initialpose)を起動しない。外部のNav2パイプラインを
+    # /robot1/cmd_velに繋いで検証する用途向け(既定trueで従来挙動)
+    enable_nav2 = LaunchConfiguration('enable_nav2', default='true')
+    declare_enable_nav2 = DeclareLaunchArgument(
+        name='enable_nav2', default_value=enable_nav2, description='Enable Nav2 stack launch'
+    )
+
     ld.add_action(declare_enable_rviz)
+    ld.add_action(declare_enable_nav2)
     ld.add_action(declare_use_sim_time)
 
     remappings_initial = [
@@ -251,7 +260,7 @@ def generate_launch_description():
             SetRemap(src="/tf_static", dst="tf_static"),
             bringup_cmd,
             initial_pose_cmd,
-        ])
+        ], condition=IfCondition(enable_nav2))
 
         rviz_launch_file = os.path.join(pkg_path, 'launch', 'rviz_launch.py')
         rviz_config_file = os.path.join(pkg_path, 'rviz', 'nav2_default_view.rviz')
