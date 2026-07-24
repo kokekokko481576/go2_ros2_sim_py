@@ -9,7 +9,7 @@ from launch.actions import (
     RegisterEventHandler
 )
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, PythonExpression
 from launch.event_handlers import OnProcessExit
 from launch_ros.actions import SetParameter
 def generate_launch_description():
@@ -29,15 +29,23 @@ def generate_launch_description():
     enable_nav2 = LaunchConfiguration('enable_nav2', default='true')
     ld.add_action(DeclareLaunchArgument('enable_nav2', default_value='true',
                                         description='Enable Nav2 stack launch'))
+    # gui:=false で Gazebo を server only(ヘッドレス)で起動。GUI窓(iGPU描画)を止め、
+    # 可視化はRViz側に任せて負荷を下げる用途(Go2_deploy #44)。
+    gui = LaunchConfiguration('gui', default='true')
+    ld.add_action(DeclareLaunchArgument('gui', default_value='true',
+                                        description='Show Gazebo GUI (false = headless server)'))
 
     ld.add_action(SetParameter(name='use_sim_time', value=use_sim_time))
 
 
-    world_file = os.path.join(pkg_path, 'world', 'cafe.world') 
+    world_file = os.path.join(pkg_path, 'world', 'cafe.world')
+    # gui=false のとき gz sim に -s(server only) を付けてヘッドレス化する
+    headless_flag = PythonExpression(["'' if '", gui, "' == 'true' else '-s '"])
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(
             get_package_share_directory('ros_gz_sim'), 'launch', 'gz_sim.launch.py')),
-        launch_arguments={'gz_args': ['-r -v4 ', world_file], 'on_exit_shutdown': 'true'}.items()
+        launch_arguments={'gz_args': [headless_flag, '-r -v4 ', world_file],
+                          'on_exit_shutdown': 'true'}.items()
     )
     ld.add_action(gazebo)
 
