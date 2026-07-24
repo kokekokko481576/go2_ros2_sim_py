@@ -191,6 +191,9 @@ def generate_launch_description():
             name='quadruped_controller',
             namespace=namespace,
             output='screen',
+            # 60Hzタイマーのみで時刻を使わないため use_sim_time=False で /clock 購読コストを排除
+            # (Go2_deploy #44。RTF≈1では壁時計タイマーで支障なし)
+            parameters=[{'use_sim_time': False}],
             remappings=remappings
         )
 
@@ -281,6 +284,9 @@ def generate_launch_description():
             namespace=namespace,
             name='cmd_vel_pub',
             output='screen',
+            # get_clock()はverboseログの経過時間表示のみ(cmd_vel中継に無関係)なので
+            # use_sim_time=False で /clock 購読コストを排除 (Go2_deploy #44)
+            parameters=[{'use_sim_time': False}],
             remappings=remappings
         )
 
