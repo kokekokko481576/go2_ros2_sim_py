@@ -191,9 +191,10 @@ def generate_launch_description():
             name='quadruped_controller',
             namespace=namespace,
             output='screen',
-            # 60Hzタイマーのみで時刻を使わないため use_sim_time=False で /clock 購読コストを排除
-            # (Go2_deploy #44。RTF≈1では壁時計タイマーで支障なし)
-            parameters=[{'use_sim_time': False}],
+            # use_sim_time=True 必須(Go2_deploy #44)。歩容の60Hz制御は sim時刻で駆動しないと、
+            # 高負荷でRTF<1になった時に壁時計タイマーが物理とズレ、脚制御が破綻して
+            # 「膝立ちでスタート」する。sim時刻ならRTF<1でもsimごとスローになるだけで同期を保つ。
+            parameters=[{'use_sim_time': True}],
             remappings=remappings
         )
 
