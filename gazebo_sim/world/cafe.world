@@ -46,8 +46,12 @@
       <direction>-0.5 0.1 -0.9</direction>
     </light>
 
+    <!-- cafeモデルの床(main_floor)をz=0に揃えたため、この摩擦ゼロの地面と重なって
+         ロボットが摩擦ゼロの方に乗ってしまい着地時に滑る問題が出た。cafeの床の
+         フットプリント外に落ちた場合の受け皿としてz=-1へ退避させ、通常時は干渉しない -->
     <model name="ground_plane">
       <static>true</static>
+      <pose>0 0 -1 0 0 0</pose>
       <link name="link">
         <collision name="collision">
           <geometry>
@@ -81,43 +85,48 @@
       </link>
     </model>
 
+    <!-- cafeモデルのmain_floor当たり判定は上面がz≈0.19にある(model.sdfのpose 0.0948+厚み0.19/2)。
+         歩容コントローラ(quadropted_controller)は地面をz=0前提の相対IKで組んでおり地面の高さを
+         認識しないため、このズレの分だけ脚が沈んで見える不具合があった。cafe一式(床・壁・テーブル・
+         Apriltag)をまとめてz=-0.19だけ下げて、床面をz=0に揃える -->
     <include>
+      <pose>0 0 -0.19 0 0 0</pose>
       <uri>model://cafe</uri>
     </include>
 
     <include>
       <name>table1</name>
-      <pose>0.5 -1.6 0.2 0 0 0</pose>
+      <pose>0.5 -1.6 0.01 0 0 0</pose>
       <uri>model://cafe_table</uri>
     </include>
 
     <include>
       <name>table2</name>
-      <pose>2.4 -5.5 0.2 0 0 0</pose>
+      <pose>2.4 -5.5 0.01 0 0 0</pose>
       <uri>model://cafe_table</uri>
     </include>
 
     <include>
       <name>table3</name>
-      <pose>-1.5 -5.5 0.2 0 0 0</pose>
+      <pose>-1.5 -5.5 0.01 0 0 0</pose>
       <uri>model://cafe_table</uri>
     </include>
 
     <include>
       <name>table4</name>
-      <pose>2.4 -9 0.2 0 0 0</pose>
+      <pose>2.4 -9 0.01 0 0 0</pose>
       <uri>model://cafe_table</uri>
     </include>
 
     <include>
       <name>table5</name>
-      <pose>-1.5 -9 0.2 0 0 0</pose>
+      <pose>-1.5 -9 0.01 0 0 0</pose>
       <uri>model://cafe_table</uri>
     </include>
 
     <include>
       <name>Apriltag36_11_00000</name>
-      <pose>-4.96 1.5 0.46 1.5708 0 1.5708</pose>
+      <pose>-4.96 1.5 0.27 1.5708 0 1.5708</pose>
       <static>true</static>
       <uri>model://Apriltag36_11_00000</uri>
     </include>
