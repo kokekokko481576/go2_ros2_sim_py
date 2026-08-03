@@ -2,7 +2,13 @@ robots:
   - name: robot1
     x_pose: '0.0'
     y_pose: '0.0'
-    z_pose: '0.8'
+    # 起動時に脚が沈んだ姿勢で固まる不具合の主因は cafe.world 側の床面の高さズレ
+    # だったが(cafe.world参照)、念のため自由落下そのものも最小限にしておく。
+    # 脚が伸びきった状態(関節角0、hip〜足先=thigh_length+calf_length+foot_radius=
+    # 0.213+0.213+0.02=0.446m、leg.xacro/const.xacro参照)で接地する高さぎりぎりの
+    # 0.46に設定(元は0.8で、joint_group_controller有効化前の無制御な自由落下距離が
+    # 大きいほど着地の衝撃も大きくなるため)
+    z_pose: '0.46'
   # - name: robot2
   #   x_pose: '-2.0'
   #   y_pose: '0.0'
