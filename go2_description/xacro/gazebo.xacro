@@ -155,6 +155,25 @@
             </joint>
         </ros2_control>
 
+        <!--
+            D1アームは重力を切っている(暫定処置)。position_proportional_gain(gz_ros2_controlの
+            position指令→effort変換の内部Pゲイン、ロボット全体共通の1値)を100→5000まで試したが
+            改善せず、joint2が指令(0.3rad)を無視して重力で可動域端(1.57rad)まで振れきる挙動が
+            解消しなかった(原因未特定。ゲインが効いていない可能性がある)。ゲインは脚の歩行にも
+            影響する共通パラメータで検証コストが高いため、いったんD1アーム側だけ重力を無効化して
+            回避している。Issue #66で本格的な関節制御ロジックを作る際に、根本原因を調べて
+            重力を戻すこと。
+        -->
+        <gazebo reference="d1_base_link"><gravity>false</gravity></gazebo>
+        <gazebo reference="d1_link1"><gravity>false</gravity></gazebo>
+        <gazebo reference="d1_link2"><gravity>false</gravity></gazebo>
+        <gazebo reference="d1_link3"><gravity>false</gravity></gazebo>
+        <gazebo reference="d1_link4"><gravity>false</gravity></gazebo>
+        <gazebo reference="d1_link5"><gravity>false</gravity></gazebo>
+        <gazebo reference="d1_link6"><gravity>false</gravity></gazebo>
+        <gazebo reference="d1_link_l"><gravity>false</gravity></gazebo>
+        <gazebo reference="d1_link_r"><gravity>false</gravity></gazebo>
+
         <gazebo reference="imu_link">
             <!--<material>Gazebo/Black</material>-->
             <gravity>false</gravity>
