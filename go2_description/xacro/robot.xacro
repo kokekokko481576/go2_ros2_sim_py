@@ -9,6 +9,7 @@
     <xacro:include filename="$(find go2_description)/xacro/leg.xacro"/>
     <!-- <xacro:include filename="$(find go2_description)/xacro/stairs.xacro"/> -->
     <xacro:include filename="$(find go2_description)/xacro/gazebo.xacro"/>
+    <xacro:include filename="$(find d1_550_description)/urdf/d1_arm.xacro"/>
     <!-- <xacro:include filename="$(find go2_description)/launch/stairs.urdf.xacro"/> -->
     <xacro:robot_gazebo_sensors robot_name="$(arg robot_name)"/>
 
@@ -62,9 +63,16 @@
             <inertia
                 ixx="${trunk_ixx}" ixy="${trunk_ixy}" ixz="${trunk_ixz}"
                 iyy="${trunk_iyy}" iyz="${trunk_iyz}"
-                izz="${trunk_izz}"/>  
+                izz="${trunk_izz}"/>
         </inertial>
     </link>
+
+    <!--
+        D1-Tアーム(背面搭載)。mount原点(xyz/rpy)は実機未計測の仮値(trunk上面・後方寄り)。
+        実機到着後にGo2背面への実際の搭載位置を計測し、更新すること
+        (Go2_deploy Issue #65、docs/計画/アーム動作.md §5)。
+    -->
+    <xacro:d1_arm parent="trunk" prefix="d1_" xyz="-0.15 0 0.10" rpy="0 0 0"/>
 
     <joint name='laser_scan' type='fixed'>
         <parent link="base_link"/>,

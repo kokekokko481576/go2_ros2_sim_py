@@ -185,6 +185,18 @@ def generate_launch_description():
             remappings=remappings
         )
 
+        # D1-Tアーム(背面搭載)用コントローラ。脚のjoint_group_controllerとは別系統
+        # (Go2_deploy Issue #65)。関節目標値のpublishロジック自体はIssue #66で実装する。
+        d1_arm_controller = Node(
+            package='controller_manager',
+            executable='spawner',
+            namespace=namespace,
+            name='d1_arm_controller',
+            arguments=['d1_arm_controller'],
+            output='screen',
+            remappings=remappings
+        )
+
         controller = Node(
             package='quadropted_controller',
             executable='robot_controller_gazebo.py',
@@ -317,6 +329,7 @@ def generate_launch_description():
             SetRemap(src="/tf_static", dst="tf_static"),
             joint_state_broadcaster,
             joint_group_controller,
+            d1_arm_controller,
             controller,
             cmd_vel_pub,
             odom,
