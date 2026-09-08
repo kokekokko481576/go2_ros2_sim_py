@@ -69,10 +69,12 @@
 
     <!--
         D1-Tアーム(背面搭載)。mount原点(xyz/rpy)は実機未計測の仮値(trunk上面・後方寄り)。
+        2026-09-08、Gazebo目視確認でユーザーからのフィードバック(前後・高さのズレ)を
+        反映して見た目上妥当な位置に調整したのみで、実測値ではない点は変わらない。
         実機到着後にGo2背面への実際の搭載位置を計測し、更新すること
         (Go2_deploy Issue #65、docs/計画/アーム動作.md §5)。
     -->
-    <xacro:d1_arm parent="trunk" prefix="d1_" xyz="-0.15 0 0.10" rpy="0 0 0"/>
+    <xacro:d1_arm parent="trunk" prefix="d1_" xyz="-0.05 0 0.06" rpy="0 0 0"/>
 
     <joint name='laser_scan' type='fixed'>
         <parent link="base_link"/>,
