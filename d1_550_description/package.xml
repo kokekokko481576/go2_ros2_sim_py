@@ -8,7 +8,8 @@
     ament_cmake + xacro for use with gz sim. See Go2_deploy Issue #65.
   </description>
 
-  <maintainer email="TODO@example.com">TODO</maintainer>
+  <maintainer email="kogakou.k@gmail.com">Koichiro Koga</maintainer>
+  <!-- ライセンスは取得元(Unitree CDN)の表記を引き継いだ値で、再配布条件は未確認。README.md の「出典とライセンス」参照 -->
   <license>BSD</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
