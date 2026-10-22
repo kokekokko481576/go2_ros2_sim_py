@@ -95,6 +95,85 @@
                 <state_interface name="effort"/>
             </joint>
         </ros2_control>
+
+        <!--
+            D1-Tアーム用のros2_control(脚用GazeboSystemとは別系統。歩行制御の
+            joint_group_controllerを巻き込まないよう、コントローラを分離している)。
+        -->
+        <ros2_control name="${robot_name}_D1ArmGazeboSystem" type="system">
+            <hardware>
+                <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+            </hardware>
+
+            <joint name="d1_joint1">
+                <command_interface name="position"/>
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+                <state_interface name="effort"/>
+            </joint>
+            <joint name="d1_joint2">
+                <command_interface name="position"/>
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+                <state_interface name="effort"/>
+            </joint>
+            <joint name="d1_joint3">
+                <command_interface name="position"/>
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+                <state_interface name="effort"/>
+            </joint>
+            <joint name="d1_joint4">
+                <command_interface name="position"/>
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+                <state_interface name="effort"/>
+            </joint>
+            <joint name="d1_joint5">
+                <command_interface name="position"/>
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+                <state_interface name="effort"/>
+            </joint>
+            <joint name="d1_joint6">
+                <command_interface name="position"/>
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+                <state_interface name="effort"/>
+            </joint>
+            <joint name="d1_joint_l">
+                <command_interface name="position"/>
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+                <state_interface name="effort"/>
+            </joint>
+            <joint name="d1_joint_r">
+                <command_interface name="position"/>
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+                <state_interface name="effort"/>
+            </joint>
+        </ros2_control>
+
+        <!--
+            D1アームは重力を切っている(暫定処置)。position_proportional_gain(gz_ros2_controlの
+            position指令→effort変換の内部Pゲイン、ロボット全体共通の1値)を100→5000まで試したが
+            改善せず、joint2が指令(0.3rad)を無視して重力で可動域端(1.57rad)まで振れきる挙動が
+            解消しなかった(原因未特定。ゲインが効いていない可能性がある)。ゲインは脚の歩行にも
+            影響する共通パラメータで検証コストが高いため、いったんD1アーム側だけ重力を無効化して
+            回避している。Issue #66で本格的な関節制御ロジックを作る際に、根本原因を調べて
+            重力を戻すこと。
+        -->
+        <gazebo reference="d1_base_link"><gravity>false</gravity></gazebo>
+        <gazebo reference="d1_link1"><gravity>false</gravity></gazebo>
+        <gazebo reference="d1_link2"><gravity>false</gravity></gazebo>
+        <gazebo reference="d1_link3"><gravity>false</gravity></gazebo>
+        <gazebo reference="d1_link4"><gravity>false</gravity></gazebo>
+        <gazebo reference="d1_link5"><gravity>false</gravity></gazebo>
+        <gazebo reference="d1_link6"><gravity>false</gravity></gazebo>
+        <gazebo reference="d1_link_l"><gravity>false</gravity></gazebo>
+        <gazebo reference="d1_link_r"><gravity>false</gravity></gazebo>
+
         <gazebo reference="imu_link">
             <!--<material>Gazebo/Black</material>-->
             <gravity>false</gravity>
