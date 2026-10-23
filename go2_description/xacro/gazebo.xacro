@@ -275,6 +275,40 @@
         </gazebo>
 
 
+        <!-- D1 先端のカメラ(実機は RealSense D405、水平視野 約87度)。RGB のみ。深度は未対応(Go2_deploy #85)。
+             near は D405 の最短測距(約7cm)に合わせた。fixed joint はURDF→SDF変換で統合されると
+             フレームが TF から消えるので、preserveFixedJoint で残す -->
+        <xacro:if value="$(arg enable_arm_cam)">
+        <gazebo reference="d1_arm_cam_joint">
+            <preserveFixedJoint>true</preserveFixedJoint>
+        </gazebo>
+        <gazebo reference="d1_arm_cam_optical_joint">
+            <preserveFixedJoint>true</preserveFixedJoint>
+        </gazebo>
+        <gazebo reference="d1_arm_cam">
+            <sensor name="arm_camera" type="camera">
+                <pose> 0 0 0 0 0 0 </pose>
+                <visualize>false</visualize>
+                <update_rate>10</update_rate>
+                <camera>
+                    <camera_info_topic>/${robot_name}/arm_cam/camera_info</camera_info_topic>
+                    <horizontal_fov>1.518</horizontal_fov>
+                    <image>
+                        <format>R8G8B8</format>
+                        <width>640</width>
+                        <height>360</height>
+                    </image>
+                    <clip>
+                        <near>0.07</near>
+                        <far>4.0</far>
+                    </clip>
+                </camera>
+                <topic>/${robot_name}/arm_cam/image</topic>
+                <gz_frame_id>d1_arm_cam_optical_frame</gz_frame_id>
+            </sensor>
+        </gazebo>
+        </xacro:if>
+
         <gazebo reference="trunk">
             <mu1>0.2</mu1>
             <mu2>0.2</mu2>
