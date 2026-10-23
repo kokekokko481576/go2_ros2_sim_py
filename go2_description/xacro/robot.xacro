@@ -215,6 +215,23 @@
         </collision>
     </link>
   -->
+    <!-- D1 先端のカメラ(実機は RealSense D405)。見た目(取付金具)は無く、センサの位置だけを置く。
+         **位置・向きは仮の値**(Inventor の設計値が来たら差し替える。Go2_deploy #85)。
+         link6 の +x がグリッパの突き出す向き。そこから少し上・前に置き、+x(グリッパの先)を向ける -->
+    <joint name="d1_arm_cam_joint" type="fixed">
+        <parent link="d1_link6"/>
+        <child link="d1_arm_cam"/>
+        <origin xyz="0.03 0 0.045" rpy="0 0 0"/>
+    </joint>
+
+    <link name="d1_arm_cam">
+        <inertial>
+            <mass value="0.001"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+        </inertial>
+    </link>
+
     <joint name="camera_face_joint" type="fixed">
         <parent link="base_link"/>
         <child link="camera_face"/>
