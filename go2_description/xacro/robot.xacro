@@ -3,6 +3,8 @@
 <robot name="robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
     <xacro:arg name="DEBUG" default="false"/>
+    <!-- D1 先端カメラ(描画カメラが1台増え、10Hzで負荷になる)。マルチロボット・headless/CI では false にできる -->
+    <xacro:arg name="enable_arm_cam" default="true"/>
 
     <xacro:include filename="$(find go2_description)/xacro/const.xacro"/>
     <xacro:include filename="$(find go2_description)/xacro/materials.xacro"/>
