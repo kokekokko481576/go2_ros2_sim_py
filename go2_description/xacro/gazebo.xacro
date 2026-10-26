@@ -275,7 +275,9 @@
         </gazebo>
 
 
-        <!-- D1 先端のカメラ(実機は RealSense D405、水平視野 約87度)。RGB のみ。深度は未対応(Go2_deploy #85)。
+        <!-- D1 先端のカメラ(実機は RealSense D405、水平視野 約87度)。RGB+深度(Go2_deploy #85 フォローアップ)。
+             aim_correct(深度でビード根元を検出して撮影位置を補正)が深度を使うため、
+             rgbd_camera にして image/depth_image/points/camera_info をまとめて出す。
              near は D405 の最短測距(約7cm)に合わせた。fixed joint はURDF→SDF変換で統合されると
              フレームが TF から消えるので、preserveFixedJoint で残す -->
         <xacro:if value="$(arg enable_arm_cam)">
@@ -286,12 +288,13 @@
             <preserveFixedJoint>true</preserveFixedJoint>
         </gazebo>
         <gazebo reference="d1_arm_cam">
-            <sensor name="arm_camera" type="camera">
+            <sensor name="arm_camera" type="rgbd_camera">
                 <pose> 0 0 0 0 0 0 </pose>
                 <visualize>false</visualize>
                 <update_rate>10</update_rate>
                 <camera>
-                    <camera_info_topic>/${robot_name}/arm_cam/camera_info</camera_info_topic>
+                    <!-- rgbd_cameraはcamera_info_topicタグを無視し、常に<topic>/camera_infoへ出す
+                         (/${robot_name}/arm_cam/camera_info。実機検証で確認済み) -->
                     <horizontal_fov>1.518</horizontal_fov>
                     <image>
                         <format>R8G8B8</format>
@@ -303,7 +306,7 @@
                         <far>4.0</far>
                     </clip>
                 </camera>
-                <topic>/${robot_name}/arm_cam/image</topic>
+                <topic>/${robot_name}/arm_cam</topic>
                 <gz_frame_id>d1_arm_cam_optical_frame</gz_frame_id>
             </sensor>
         </gazebo>

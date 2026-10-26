@@ -153,8 +153,13 @@ def generate_launch_description():
                 f'/{namespace}/color/camera_info@sensor_msgs/msg/CameraInfo@gz.msgs.CameraInfo',
                 f'/{namespace}/color/image_raw@sensor_msgs/msg/Image@gz.msgs.Image',
                 f'/{namespace}/color/image_rect@sensor_msgs/msg/Image@gz.msgs.Image',
-                f'/{namespace}/arm_cam/camera_info@sensor_msgs/msg/CameraInfo@gz.msgs.CameraInfo',
+                # D1先端のRGB+深度カメラ(Go2_deploy #85 フォローアップ)。rgbd_cameraは<topic>の下に
+                # image/depth_image/points/camera_infoを出す(camera_infoは"color/"を挟まない。
+                # go2-simコンテナでgz topic -eにより実データを確認済み)
                 f'/{namespace}/arm_cam/image@sensor_msgs/msg/Image@gz.msgs.Image',
+                f'/{namespace}/arm_cam/depth_image@sensor_msgs/msg/Image@gz.msgs.Image',
+                f'/{namespace}/arm_cam/points@sensor_msgs/msg/PointCloud2@gz.msgs.PointCloudPacked',
+                f'/{namespace}/arm_cam/camera_info@sensor_msgs/msg/CameraInfo@gz.msgs.CameraInfo',
                 # f'/{namespace}/clock@rosgraph_msgs/msg/Clock@gz.msgs.Clock'
             ]
         )
