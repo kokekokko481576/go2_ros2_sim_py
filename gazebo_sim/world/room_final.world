@@ -1,0 +1,115 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="default">
+
+    <!-- Plugin for simulating physics -->
+    <plugin
+      filename="gz-sim-physics-system"
+      name="gz::sim::systems::Physics">
+    </plugin>
+
+    <!-- Plugin for handling user commands -->
+    <plugin
+      filename="gz-sim-user-commands-system"
+      name="gz::sim::systems::UserCommands">
+    </plugin>
+
+    <!-- Plugin for broadcasting scene updates -->
+    <plugin
+      filename="gz-sim-scene-broadcaster-system"
+      name="gz::sim::systems::SceneBroadcaster">
+    </plugin>
+
+    <!-- Plugin for handling sensors like the LIDAR -->
+    <plugin
+      filename="gz-sim-sensors-system"
+      name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+
+    <!-- Plugin for IMU -->
+    <plugin filename="gz-sim-imu-system"
+      name="gz::sim::systems::Imu">
+    </plugin>
+
+     <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>1 1 1 1</diffuse>
+      <specular>0.5 0.5 0.5 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <!-- room_finalモデルの床面(PortalCamスキャン座標でz≈-0.99)が万一の落下先に
+         なるよう、摩擦ゼロの受け皿をさらに下のz=-2へ配置(cafe.worldと同じ考え方) -->
+    <model name="ground_plane">
+      <static>true</static>
+      <pose>0 0 -2 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>0.0</mu>
+                <mu2>0.0</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.8 0.8 0.8 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <specular>0.8 0.8 0.8 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- room_finalの床(PortalCamスキャン座標でz≈-0.99)をワールドz=0に揃える。
+         gait controllerが地面z=0前提の相対IKで組まれているため(cafe.worldと同じ理由) -->
+    <include>
+      <name>room_final</name>
+      <pose>0 0 0.99 0 0 0</pose>
+      <uri>model://room_final</uri>
+    </include>
+
+    <!-- 録画用カメラ。occupancy map(room_map_v3)で確認した部屋内の自由空間(2.15,2.45)から、
+         ロボットの通路(y≈-0.47)を南向きに見下ろす構図 -->
+    <model name="overview_cam">
+      <static>true</static>
+      <pose>2.15 2.45 2.0 0 0.5 -1.5708</pose>
+      <link name="link">
+        <sensor name="camera" type="camera">
+          <camera>
+            <horizontal_fov>1.1</horizontal_fov>
+            <image><width>1280</width><height>720</height></image>
+            <clip><near>0.1</near><far>100</far></clip>
+          </camera>
+          <always_on>true</always_on>
+          <update_rate>15</update_rate>
+          <topic>overview_cam/image</topic>
+        </sensor>
+      </link>
+    </model>
+
+  </world>
+</sdf>

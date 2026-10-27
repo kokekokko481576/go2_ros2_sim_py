@@ -1,0 +1,8 @@
+robots:
+  - name: robot1
+    # room_final.world側でroom_finalモデルの床をz=0に揃えているので、
+    # x_pose/y_poseはPortalCamスキャン座標そのまま使える。
+    # room_map_v2.pgmの「壁に囲まれた自由空間」から選んだ安全な地点(壁際を避けた)
+    x_pose: '1.673'
+    y_pose: '-0.472'
+    z_pose: '0.46'
